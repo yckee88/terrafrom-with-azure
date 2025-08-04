@@ -1,0 +1,18 @@
+aks_name = "<your-aks-cluster-name>"
+aks_resources_group = "<your-aks-resource-group>"
+location = "<your-azure-region>"
+tags = {
+  project     = "<your-project-name>"
+  environment = "<your-environment>"
+}
+acr_name = "<your-acr-name>"
+acr_resource_group_name = "<your-acr-resource-group>"
+acr_sku = "<your-acr-sku>"
+postgres_name = "<your-postgres-name>"
+postgres_resources_group_name = "<your-postgres-resource-group>"
+postgres_db_admin_login = "<your-postgres-admin-login>"
+key_vault_name = "<your-key-vault-name>"
+key_vault_resource_group_name = "<your-key-vault-resource-group>"
+postgres_create_mode = "<your-postgres-create-mode>"
+postgres_source_server_id = "<your-postgres-source-server-id>"
+postgres_point_in_time_restore_time_utc = "<your-postgres-restore-time>"
