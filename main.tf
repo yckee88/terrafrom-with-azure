@@ -25,16 +25,17 @@ module "postgres" {
   resource_group_name = var.postgres_resources_group_name
   db_admin = var.postgres_db_admin_login
   tags = var.tags
-  postgres_password_value = module.keyvault.postgres_password_value
+  postgres_password_value = random_password.postgres_password.result
   create_mode = var.postgres_create_mode
   source_server_id = var.postgres_source_server_id
   point_in_time_restore_time_utc = var.postgres_point_in_time_restore_time_utc
+  allowed_ips = var.postgres_allowed_ips
 }
 
 resource "random_password" "postgres_password" {
   length           = 16
   special          = true
-  override_special = "_@%+"
+  override_special = "!@#$"
   min_lower        = 1
   min_upper        = 1
   min_numeric      = 1
@@ -49,6 +50,7 @@ module "keyvault" {
   tags = var.tags
   postgres_password = random_password.postgres_password.result
 }
+
 
 resource "azurerm_resource_group" "rg_keyvault" {
   name     = var.key_vault_resource_group_name

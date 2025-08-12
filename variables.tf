@@ -64,10 +64,21 @@ variable "postgres_source_server_id" {
   default     = null
 }
 
+
 variable "postgres_db_admin_login" {
   description = "login username of postgres"
   type = string
   sensitive = true
+}
+
+variable "postgres_allowed_ips" {
+  description = "List of IP addresses/ranges allowed to connect to PostgreSQL"
+  type = list(object({
+    name             = string
+    start_ip_address = string
+    end_ip_address   = string
+  }))
+  default = []
 }
 
 variable "key_vault_name" {

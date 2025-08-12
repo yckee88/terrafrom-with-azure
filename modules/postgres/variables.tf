@@ -47,3 +47,13 @@ variable "point_in_time_restore_time_utc" {
   type        = string
   default     = null
 }
+
+variable "allowed_ips" {
+  description = "List of IP addresses/ranges allowed to connect to the database"
+  type = list(object({
+    name             = string
+    start_ip_address = string
+    end_ip_address   = string
+  }))
+  default = []
+}
