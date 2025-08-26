@@ -1,0 +1,82 @@
+---
+- name: Deploy monitoring stack (Prometheus + Grafana)
+  hosts: aks_clusters
+  gather_facts: false
+  tasks:
+    - name: Create monitoring namespace
+      kubernetes.core.k8s:
+        name: monitoring
+        api_version: v1
+        kind: Namespace
+        state: present
+
+    - name: Add Prometheus Helm repository
+      kubernetes.core.helm_repository:
+        name: prometheus-community
+        repo_url: https://prometheus-community.github.io/helm-charts
+
+    - name: Deploy Prometheus stack with Grafana
+      kubernetes.core.helm:
+        name: prometheus-stack
+        chart_ref: prometheus-community/kube-prometheus-stack
+        release_namespace: monitoring
+        create_namespace: true
+        values:
+          grafana:
+            adminPassword: "{{ grafana_admin_password }}"
+            service:
+              type: ClusterIP  # Use ClusterIP 
+            persistence:
+              enabled: true
+              size: 10Gi
+            ingress:
+              enabled: true
+              ingressClassName: nginx-develop
+              hosts:
+                - grafana.{{ cluster_domain }}
+              paths:
+                - path: /
+                  pathType: Prefix
+          prometheus:
+            prometheusSpec:
+              retention: 30d
+              storageSpec:
+                volumeClaimTemplate:
+                  spec:
+                    accessModes: ["ReadWriteOnce"]
+                    resources:
+                      requests:
+                        storage: 50Gi
+            ingress:
+              enabled: true
+              ingressClassName: nginx  
+              hosts:
+                - prometheus.{{ cluster_domain }}
+
+    - name: Wait for Grafana to be ready
+      kubernetes.core.k8s_info:
+        api_version: v1
+        kind: Pod
+        namespace: monitoring
+        label_selectors:
+          - app.kubernetes.io/name=grafana
+        wait: true
+        wait_condition:
+          type: Ready
+          status: "True"
+        wait_timeout: 600
+
+    - name: Display access information
+      debug:
+        msg: |
+          Monitoring stack deployed successfully!
+          
+          Grafana Dashboard:
+          - URL: http://grafana.{{ cluster_domain }}
+          - Username: admin
+          - Password: {{ grafana_admin_password }}
+          
+          Prometheus:
+          - URL: http://prometheus.{{ cluster_domain }}
+          
+          Note: Using your existing nginx ingress at {{ cluster_domain }}

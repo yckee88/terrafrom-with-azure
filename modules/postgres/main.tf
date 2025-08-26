@@ -34,7 +34,7 @@ resource "azurerm_postgresql_flexible_server" "eclaims-postgres" {
 # Wait for server to be fully operational before password update
 resource "time_sleep" "wait_for_server" {
   count           = var.create_mode != "Default" ? 1 : 0
-  create_duration = "3m"
+  create_duration = "5m"
   depends_on      = [azurerm_postgresql_flexible_server.eclaims-postgres]
 }
 
@@ -43,13 +43,19 @@ resource "azapi_update_resource" "update_password" {
   count       = var.create_mode != "Default" ? 1 : 0
   type        = "Microsoft.DBforPostgreSQL/flexibleServers@2023-03-01-preview"
   resource_id = azurerm_postgresql_flexible_server.eclaims-postgres.id
-
   body = {
     properties = {
       administratorLoginPassword = var.postgres_password_value
     }
   }
-
+  
+  # Add retry logic
+  timeouts {
+    create = "10m"
+    update = "10m"
+  }
+  
+  # Wait longer before attempting
   depends_on = [time_sleep.wait_for_server]
 }
 

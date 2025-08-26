@@ -51,6 +51,32 @@ This project provides a robust and modular solution for deploying a foundational
     terraform apply -var-file="dev.tfvars" -auto-approve
     ```
 
+## Ansible Automation
+
+This project includes Ansible playbooks to automate the configuration and management of the AKS cluster.
+
+### What it does:
+
+*   **`test-connection.yml`**: Verifies the connection to the AKS cluster and checks `kubectl` access.
+*   **`setup-kubectl.yml`**: Configures `kubectl` on your local machine to connect to the AKS cluster.
+*   **`deploy-monitoring.yml`**: Deploys a monitoring stack to the AKS cluster, including Prometheus and Grafana.
+
+### How to run:
+
+1.  **Install Ansible and dependencies:**
+    ```bash
+    pip install ansible
+    ansible-galaxy collection install azure.azcollection
+    pip install -r ansible/requirements.yml
+    ```
+
+2.  **Run a playbook:**
+    ```bash
+    # From the ansible directory
+    cd ansible
+    ansible-playbook playbooks/<playbook-name>.yml
+    ```
+
 ## Modules
 
 This project is composed of several modules, each responsible for a specific part of the infrastructure:

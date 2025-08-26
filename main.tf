@@ -7,7 +7,6 @@ module "aks" {
 }
 
 
-
 module "acr" {
     source = "./modules/acr"
     name = var.acr_name

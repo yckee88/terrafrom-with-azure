@@ -1,0 +1,4 @@
+---
+grafana_admin_password: "admin123"
+cluster_domain: "4.145.28.216.nip.io"
+ingress_class_name: "nginx-develop"

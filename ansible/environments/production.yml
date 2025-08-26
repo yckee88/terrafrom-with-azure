@@ -1,0 +1,7 @@
+---
+target_env: "production"
+grafana_admin_password: "production456"
+cluster_domain: "20.195.3.199.nip.io"  # Update with actual production IP
+ingress_class_name: "nginx-production"
+monitoring_namespace: "monitoring"
+helm_release_name: "prometheus-stack"

@@ -1,0 +1,7 @@
+---
+target_env: "staging"
+grafana_admin_password: "staging123"
+cluster_domain: "20.195.4.97.nip.io"  # Update with actual staging IP
+ingress_class_name: "nginx-staging" 
+monitoring_namespace: "monitoring"
+helm_release_name: "prometheus-stack"

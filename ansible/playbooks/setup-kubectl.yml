@@ -1,0 +1,22 @@
+---
+- name: Configure kubectl access to AKS cluster
+  hosts: aks_clusters
+  gather_facts: false
+  tasks:
+    - name: Configure kubectl
+      shell: |
+        az aks get-credentials \
+          --resource-group {{ aks_resource_group }} \
+          --name {{ aks_cluster_name }} \
+          --overwrite-existing
+      delegate_to: localhost
+
+    - name: Verify kubectl access
+      kubernetes.core.k8s_info:
+        api_version: v1
+        kind: Node
+      register: nodes
+
+    - name: Display cluster nodes
+      debug:
+        msg: "Successfully connected to AKS cluster with {{ nodes.resources | length }} nodes"

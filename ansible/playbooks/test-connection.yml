@@ -1,0 +1,62 @@
+---
+- name: Test Ansible connection and Azure access
+  hosts: aks_clusters
+  gather_facts: false
+  tasks:
+    - name: Display cluster info
+      debug:
+        msg: |
+          Cluster: {{ aks_cluster_name }}
+          Resource Group: {{ aks_resource_group }}
+          ACR: {{ acr_login_server }}
+          PostgreSQL: {{ postgres_fqdn }}
+          Key Vault: {{ key_vault_name }}
+
+    - name: Test Azure CLI access
+      shell: az account show --output json
+      register: azure_account
+      delegate_to: localhost
+
+    - name: Display Azure account
+      debug:
+        msg: "Connected to Azure subscription: {{ (azure_account.stdout | from_json).name }}"
+
+    - name: Test kubectl access
+      shell: kubectl get nodes --output json
+      register: k8s_nodes
+      delegate_to: localhost
+
+    - name: Display K8s nodes
+      debug:
+        msg: ---
+- name: Test Ansible connection and Azure access
+  hosts: aks_clusters
+  gather_facts: false
+  tasks:
+    - name: Display cluster info
+      debug:
+        msg: |
+          Cluster: {{ aks_cluster_name }}
+          Resource Group: {{ aks_resource_group }}
+          ACR: {{ acr_login_server }}
+          PostgreSQL: {{ postgres_fqdn }}
+          Key Vault: {{ key_vault_name }}
+
+    - name: Test Azure CLI access
+      shell: az account show --output json
+      register: azure_account
+      delegate_to: localhost
+
+    - name: Display Azure account
+      debug:
+        msg: "Connected to Azure subscription: {{ (azure_account.stdout | from_json).name }}"
+
+    - name: Test kubectl access
+      shell: kubectl get nodes --output json
+      register: k8s_nodes
+      delegate_to: localhost
+
+    - name: Display K8s nodes (simple)
+      debug:
+        msg: "kubectl is working - cluster accessible!"
+      when: k8s_nodes.rc == 0

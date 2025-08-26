@@ -1,0 +1,5 @@
+---
+# Basic monitoring configuration
+grafana_admin_password: "admin123"
+cluster_domain: "57.158.184.246.nip.io"  # Using your develop environment IP
+environment: "develop"
